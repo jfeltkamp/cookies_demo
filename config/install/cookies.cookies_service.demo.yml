@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: demo
+label: 'Demo third-party service'
+group: default
+url: 'https://example.com/privacy/policy'
+consent: true

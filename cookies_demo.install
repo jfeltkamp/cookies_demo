@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Installation information for the 'Cookies Demo third-party' module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function cookies_demo_install() {
+  // To ensure that you con use the same hooks
+  // Execute hooks of this module after hooks from other modules (especially
+  // from the third-party module) you want to support.
+  module_set_weight('cookies_demo', 11);
+}

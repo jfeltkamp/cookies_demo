@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Contains cookies_demo.module.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function cookies_demo_page_attachments(&$page) {
+  // Attach you library that heals the knock-out.
+  $page["#attached"]["library"][] = 'cookies_demo/default';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function cookies_demo_preprocess_field(&$variables) {
+  // If you want to knock-out an iframe from a field hook will give you all you
+  // need.
+
+  //
+  if ($variables["element"]["#formatter"] == 'oembed') {
+
+    foreach ($variables["items"] as &$item) {
+      // Move src to data-src and replace src by fallback.
+      $src = $item["content"]["#attributes"]["src"];
+      $item["content"]["#attributes"]["data-src"] = $src;
+      $item["content"]["#attributes"]["src"] = '';
+
+      // Set marker class.
+      if (!isset($item["content"]["#attributes"]["class"]) || !is_array($item["content"]["#attributes"]["class"])) {
+        $item["content"]["#attributes"]["class"] = [];
+      }
+      $item["content"]["#attributes"]["class"][] = 'cookies-video';
+
+      // Attach library.
+      if (!isset($item["content"]["#attached"])) {
+        $item["content"]["#attached"] = ["library" => []];
+      }
+      if (!isset($item["content"]["#attached"]["library"])) {
+        $item["content"]["#attached"]["library"] = [];
+      }
+      $item["content"]["#attached"]["library"][] = 'cookies_video/default';
+    }
+  }
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function cookies_demo_library_info_alter(&$libraries, $extension) {
+
+  // Given a javascript file we want to knock-out can be found in this library:
+  // demo.third.party from module demo_third_party.
+  if (isset($libraries['demo.third.party'])) {
+
+    // Avoid that the javascript you want to knock-out will not be combined.
+    $libraries['demo.third.party']['js']['/modules/contrib/demo_third_party/js/js.js']['preprocess'] = false;
+
+    // Add some attributes to prepare the script tag.
+    $libraries['demo.third.party']['js']['/modules/contrib/demo_third_party/js/js.js']['attributes'] = [
+      // Add an ID to the script tag to find it with your javascript.
+      'id' => 'coockies_demo_third_party',
+
+      // The Knock-out. A script tag of type 'application/json' will not be
+      // executed.
+      'type' => 'application/json',
+    ];
+  }
+
+}
