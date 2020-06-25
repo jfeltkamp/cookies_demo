@@ -101,5 +101,16 @@ document.addEventListener('cookiesjsrUserConsent', function (event) {
 ```
 
 ## Some pitfalls and trip hazards:
-* In the production environment javascript is usually compressed and aggregated. Our javascripts, which we want to deactivate, are no longer displayed in their own script tag in the source code. To prevent this, the attribute ```preprocess: false``` must be set  for the corresponding file in the library.
-* The cookies module does not (yet) have its own cache context. In principle, it would also be possible to evaluate user decisions in the backend, and avoid to knock-out scripts or iframes, since the cookie (in which the user decisions are stored) can also be accessed from backend. However, it is important to pay attention to the cache, which is usually deactivated in the dev environment. On the production environment suddenly nothing works because the cache has been activated.
+* **Javascript aggregation:** In the production environment javascript is usually compressed and aggregated. Our javascripts, which we want to deactivate, are no longer displayed in their own script tag in the source code. To prevent this, the attribute ```preprocess: false``` must be set  for the corresponding file in the library.
+* **Cache:** The cookies module does not (yet) have its own cache context. In principle, it would also be possible to evaluate user decisions in the backend, and avoid to knock-out scripts or iframes, since the cookie (in which the user decisions are stored) can also be accessed from backend. However, it is important to pay attention to the cache, which is usually deactivated in the dev environment. On the production environment suddenly nothing works because the cache has been activated.
+* **Module weight:** It is always a good idea to use the same hooks the third-party-integration module uses to implement their libraries and code. But you have to keep in mind, that your hooks are executed after the hook of the third-party-integration module. Otherwise you don't find what you are looking for. You can achieve this by the module weight to be set in the install file of your module. The weight must be heigher than that of the third-party-integration module.
+
+```php
+// cookie_demo.install
+/**
+ * Implements hook_install().
+ */
+function cookies_demo_install() {
+  module_set_weight('cookies_demo', 11);
+}
+```
