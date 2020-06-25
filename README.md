@@ -39,12 +39,16 @@ To prevent an iFrame from installing cookies you must manipulate the ```src``` a
 The Drupal hook system offers extensive options for manipulating source code, libraries, header tags, etc. Actually, it's always the same 3-5 hooks that you need to get to your goal.
 
 #### For Javascript:
-```hook_library_info_alter()```
-
-```hook_page_attachments ()```
+```php
+hook_library_info_alter();
+hook_page_attachments();
+hook_js_alter();
+```
 
 #### For iframes (if they are based on a field)
-```hook_preprocess_field ()```
+```php
+hook_preprocess_field();
+```
 
 ### Re-animate the third-party integration
 These knock-outs are re-animated in the frontend using Javascript. As soon as the user saves his consent in the COOKiES-UI (and every time a page is loaded) a Javascript event "cookiesjsrUserConsent" is fired, in which the decisions of the user are communicated.
@@ -96,6 +100,6 @@ document.addEventListener('cookiesjsrUserConsent', function (event) {
 });
 ```
 
-## Some Pitfalls and trip hazards:
+## Some pitfalls and trip hazards:
 * In the production environment javascript is usually compressed and aggregated. Our javascripts, which we want to deactivate, are no longer displayed in their own script tag in the source code. To prevent this, the attribute ```preprocess: false``` must be set  for the corresponding file in the library.
 * The cookies module does not (yet) have its own cache context. In principle, it would also be possible to evaluate user decisions in the backend, and avoid to knock-out scripts or iframes, since the cookie (in which the user decisions are stored) can also be accessed from backend. However, it is important to pay attention to the cache, which is usually deactivated in the dev environment. On the production environment suddenly nothing works because the cache has been activated.
