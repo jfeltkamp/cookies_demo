@@ -3,6 +3,6 @@ status: true
 dependencies: {  }
 id: demo
 label: 'Demo third-party service'
-group: default
+group: media
 url: 'https://example.com/privacy/policy'
 consent: true
