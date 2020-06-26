@@ -1,11 +1,13 @@
 # COOKiES Demo
 
 ## Introduction
-The COOKiES module prevents the installation of cookies in accordance with the GDPR until the user has given his consent that cookies may be installed. There are many third-party integration modules on Drupal.org that have gotten into a dilemma due to the newer GDPR: They can only be used in compliance with GDPR if they could connect to user-consent management, which it not yet exist within the Drupal API. There are many external Drupal user consent management systems that independently integrate third-party services. If you use these external Drupal tools, you would have to do without the configurability, authorizations and control that are provided by corresponding third-party integration modules (Contrib modules). - The COOKiES module closes this gap by providing user consent management within the Drupal API.
+The [COOKiES module][cookies_module] for Drupal 8+9 prevents the installation of cookies in accordance with the GDPR until the user has given his consent that cookies may be installed. There are many [third-party integration modules][third-party-int-mods] on Drupal.org that have gotten into a dilemma due to the newer GDPR: They can only be used in compliance with GDPR if they could connect to user-consent management, which not yet exists within the Drupal API. There are many external Drupal user-consent-management systems that independently integrate third-party services. If you use these external Drupal tools, you would have to do without the configurability, authorizations and control that are provided by corresponding third-party integration modules (Contrib modules). - The COOKiES module closes this gap by providing user consent management within the Drupal API.
 
 In principle, developers of third-party integration modules could connect their modules directly to the COOKiES consent management; Of course they wouldn't do that as long as COOKiES is not in the Drupal core. However, there is an alternative to bridge the gap between a third-party-integration module and the COOKiES module: namely by means of an additional bridge module that intercepts third-party integration within the Drupal API (knock-out) and re-animates as soon as the user has given his consent in the COOKiES UI. - In this way, the third-party integration module remains independent of COOKiES and can still use its user consent management.
 
 The COOKiES Demo Module should show how this works and help to create your own bridge modules.
+
+PS.: _We collect bridge modules to combine them in a COOKIES extend module. If you have developed a bridge module for a frequently used third-party integration module, please send us your work._ ([J. Feltkamp][jfeltkamp])
 
 ## What has a bridge module to do to connect my third-party-integration module to COOKiES?
 
@@ -69,13 +71,13 @@ For the Javascript, which we paralyzed with the type attribute, it is not enough
 
 ````js
 jQuery('script[data-sid="extservice"]').each(function() {
-    var replacement = jQuery(this).clone().removeAttr('type');
-    jQuery(this).replaceWith(replacement.html());
+    var $replacement = jQuery(this).clone().removeAttr('type');
+    jQuery(this).replaceWith($replacement);
 });
 ````
 
 #### Re-animate a ```<iframe/>```
-We have it easier with the iframe. Here we only need to read the content of the data-src attribute and write it back into the src attribute. - 
+We have it easier with the iframe. Here we only need to read the content of the data-src attribute and write it back into the src attribute.
 
 ```js
 jQuery('iframe[data-sid="youtube"]').each(function() {
@@ -83,7 +85,7 @@ jQuery('iframe[data-sid="youtube"]').each(function() {
 });
 ```
 
-However, there is another problem with the iframe. An empty iframe leaves a big gap in the layout. It would be nice if this gap were used to display a text in it that the iframe is deactivated because the user has not yet given his consent. It would be even better if there was a button to get approval with one click and thus activate the iframe immediately. For this function, the COOKiES module comes with a jQuery extension that makes it possible.
+However, there is another problem with the iframe. An empty iframe leaves a big gap in the layout. It would be nice if this gap were used to display a text in it that the iframe is deactivated because the user has not yet given his consent. It would be even better if there was a button to get approval with one click and thus activate the iframe immediately. For this function, the COOKiES module comes with a jQuery extension ```cookiesOverlay(cookies_service.id)``` that makes it real.
 
 A complete script to re-animate an iframe will look like this.
 
@@ -95,7 +97,7 @@ document.addEventListener('cookiesjsrUserConsent', function (event) {
             jQuery(this).attr('src', jQuery(this).data('src'));
         });
     } else {
-        $('iframe[data-sid="youtube"]', context).cookiesOverlay('video');
+        $('iframe[data-sid="youtube"]', context).cookiesOverlay('youtube');
     }
 });
 ```
@@ -114,3 +116,6 @@ function cookies_demo_install() {
   module_set_weight('cookies_demo', 11);
 }
 ```
+[jfeltkamp]: https://www.drupal.org/user/2471686
+[cookies_module]: https://www.drupal.org/project/cookies
+[third-party-int-mods]: https://www.drupal.org/project/project_module?f%5B2%5D=im_vid_3%3A52

@@ -1,6 +1,6 @@
-name: 'Cookies Twitter Media'
+name: 'Cookies Demo'
 type: module
-description: 'Submodule of Cookies to manage Twitter media items (implemented by Twitter Media module) inside of Cookies.'
+description: 'Submodule of COOKiES to manage a third-party-integration (implemented by an other third-party-integration module) inside of COOKiES user consent management.'
 core: 8.x
 package: 'COOKiES'
 dependencies:
