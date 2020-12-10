@@ -4,13 +4,17 @@
  * @file
  * Contains cookies_demo.module.
  */
+use Drupal\cookies\CookiesKnockOutService;
 
 /**
  * Implements hook_page_attachments().
  */
 function cookies_demo_page_attachments(&$page) {
   // Attach you library that heals the knock-out.
-  $page["#attached"]["library"][] = 'cookies_demo/default';
+  $doKo = CookiesKnockOutService::getInstance()->doKnockOut();
+  if ($doKo) {
+    $page["#attached"]["library"][] = 'cookies_demo/default';
+  }
 }
 
 /**
@@ -20,8 +24,10 @@ function cookies_demo_preprocess_field(&$variables) {
   // If you want to knock-out an iframe from a field hook will give you all you
   // need.
 
-  //
-  if ($variables["element"]["#formatter"] == 'oembed') {
+  // The Knock-Out-Service tests, if the the COOKiES UI block is present on this page.
+  // So a knock-out will only be done if the plugin is present that can heal the knock-out.
+  $doKo = CookiesKnockOutService::getInstance()->doKnockOut();
+  if ($doKo && $variables["element"]["#formatter"] == 'oembed') {
 
     foreach ($variables["items"] as &$item) {
       // Move src to data-src and replace src by fallback.
@@ -55,9 +61,10 @@ function cookies_demo_library_info_alter(&$libraries, $extension) {
 
   // Given a javascript file we want to knock-out can be found in this library:
   // demo.third.party from module demo_third_party.
-  if (isset($libraries['demo.third.party'])) {
+  $doKo = CookiesKnockOutService::getInstance()->doKnockOut();
+  if ($doKo && isset($libraries['demo.third.party'])) {
 
-    // Avoid that the javascript you want to knock-out will not be combined.
+    // Avoid that the javascript you want to knock-out will be combined.
     $libraries['demo.third.party']['js']['/modules/contrib/demo_third_party/js/js.js']['preprocess'] = false;
 
     // Add some attributes to prepare the script tag.
