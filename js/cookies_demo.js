@@ -13,12 +13,19 @@
     // id corresponding to the cookies_service.schema->id.
     id: 'base',
 
-    activate: function (context) {
+    /**
+     * Called when consent was given.
+     */
+    consentGiven: function (context) {
       // Do stuff here to activate the specific 3rd-party service.
     },
 
-    fallback: function (context) {
+    /**
+     * Called when consent was denied / revoked.
+     */
+    consentDenied: function (context) {
       // Do stuff here to display that 3rd-party service is disabled.
+      // If needed do stuff here to disable the 3rd-party service immediately.
     },
 
     attach: function (context) {
@@ -26,9 +33,11 @@
       document.addEventListener('cookiesjsrUserConsent', function (event) {
         var service = (typeof event.detail.services === 'object') ? event.detail.services : {};
         if (typeof service[self.id] !== 'undefined' && service[self.id]) {
-          self.activate(context);
+          // Conent was given:
+          self.consentGiven(context);
         } else {
-          self.fallback(context);
+          // Consent was denied / revoked:
+          self.consentDenied(context);
         }
       });
     }
