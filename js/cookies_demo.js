@@ -1,6 +1,14 @@
 /**
  * @file
  * Defines Javascript behaviors for the cookies module.
+ * These are invoked once the user performs a cookie consent
+ * action like: accept / deny / revoke to immediately
+ * react on that with loading a script, video, iframe, etc.
+ * or if consent is revoked, removing existing cookies,
+ * stop stracking or similar.
+ *
+ * This is NOT invoked on each page load, only immediately, when the user
+ * takes concrete action in the COOKiES banner.
  */;
 
 (function (Drupal, $) {
