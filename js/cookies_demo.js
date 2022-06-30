@@ -34,6 +34,9 @@
     consentDenied: function (context) {
       // Do stuff here to display that 3rd-party service is disabled.
       // If needed do stuff here to disable the 3rd-party service immediately.
+      // In the most use cases you don't need to do anything here, because service is already disabled.
+      // Typical use case for this function is to init an overlay "This content is blocked because you didn't gave consent..."
+      // $('.field-my-plugin .field-item', context).cookiesOverlay('video');
     },
 
     attach: function (context) {
@@ -44,7 +47,7 @@
           // Conent was given:
           self.consentGiven(context);
         } else {
-          // Consent was denied / revoked:
+          // Consent was denied/revoked.
           self.consentDenied(context);
         }
       });
