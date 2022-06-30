@@ -36,7 +36,7 @@
       // If needed do stuff here to disable the 3rd-party service immediately.
       // In the most use cases you don't need to do anything here, because service is already disabled.
       // Typical use case for this function is to init an overlay "This content is blocked because you didn't gave consent..."
-      // $('.field-my-plugin .field-item', context).cookiesOverlay('video');
+      // $('.field-my-plugin .field-item', context).cookiesOverlay(this.id);
     },
 
     attach: function (context) {
